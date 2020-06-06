@@ -1,4 +1,6 @@
 defmodule Tinvestex.Http do
+  require Logger
+
   @base_url "https://api-invest.tinkoff.ru/openapi"
   @throttle 1000
 
@@ -38,8 +40,13 @@ defmodule Tinvestex.Http do
       {:ok, %HTTPoison.Response{status_code: 500, body: response_body}} ->
         {:error, handle_server_error(response_body)}
 
-      errors ->
-        errors
+      {:error, errors} ->
+        %HTTPoison.Error{id: _, reason: reason} = errors
+
+        if logging(),
+          do: Logger.error("Http POST request #{path} failed, reason: #{IO.inspect(reason)}")
+
+        {:error, errors}
     end
   end
 
@@ -66,6 +73,10 @@ defmodule Tinvestex.Http do
 
   defp url(path) do
     "#{@base_url}/#{path}"
+  end
+
+  def logging do
+    !is_nil(Application.get_env(:tinvestex, :log))
   end
 
   defp token do

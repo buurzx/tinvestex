@@ -1,11 +1,13 @@
 defmodule Tinvestex.Api.Trading do
-  def request(adapter, path, body \\ %{}, params \\ %{}) do
-    case api_map(path) do
+  import Tinvestex.Api.Base
+
+  def request(adapter, command, body \\ %{}, params \\ %{}) do
+    case api_map(command) do
       nil ->
-        {:error, "No route found for #{path} in trading api"}
+        {:error, "No route found for #{command} in trading api"}
 
       _ ->
-        process_request(adapter, body, api_map(path), params)
+        process_request(adapter, body, api_map(command), params)
     end
   end
 
@@ -23,7 +25,7 @@ defmodule Tinvestex.Api.Trading do
     end
   end
 
-  defp api_map(path) do
-    %{}
+  defp api_map(command) do
+    command_map()[command]
   end
 end

@@ -1,13 +1,14 @@
 defmodule Tinvestex.Api.Sandbox do
+  import Tinvestex.Api.Base
   @prefix_url "sandbox"
 
-  def request(adapter, path, body \\ %{}, params \\ %{}) do
-    case sandbox_api_map(path) do
+  def request(adapter, command, body \\ %{}, params \\ %{}) do
+    case sandbox_api_map(command) do
       nil ->
-        {:error, "No route found for #{path} in trading api"}
+        {:error, "No route found for #{command} in trading api"}
 
       _ ->
-        process_request(adapter, body, sandbox_api_map(path), params)
+        process_request(adapter, body, sandbox_api_map(command), params)
     end
   end
 
@@ -20,30 +21,33 @@ defmodule Tinvestex.Api.Sandbox do
       end
 
     case route_params["method"] do
-      "post" -> adapter.post(route_params["url"], post_body, params)
-      "get" -> adapter.get(route_params["url"], params)
+      "post" -> adapter.post("#{@prefix_url}/#{route_params["url"]}", post_body, params)
+      "get" -> adapter.get("#{@prefix_url}/#{route_params["url"]}", params)
     end
   end
 
-  def sandbox_api_map(path) do
-    %{
-      "register" => %{
-        "url" => "#{@prefix_url}/sandbox/register",
-        "method" => "post",
-        "default_body" => %{"brokerAccountType" => "Tinkoff"}
+  def sandbox_api_map(command) do
+    Map.merge(
+      %{
+        "register" => %{
+          "url" => "sandbox/register",
+          "method" => "post",
+          "default_body" => %{"brokerAccountType" => "Tinkoff"}
+        },
+        "remove" => %{
+          "url" => "sandbox/remove",
+          "method" => "post"
+        },
+        "clear" => %{
+          "url" => "sandbox/clear",
+          "method" => "post"
+        },
+        "set_currency_balance" => %{
+          "url" => "sandbox/currencies/balance",
+          "method" => "post"
+        }
       },
-      "remove" => %{
-        "url" => "#{@prefix_url}/sandbox/remove",
-        "method" => "post"
-      },
-      "clear" => %{
-        "url" => "#{@prefix_url}/sandbox/clear",
-        "method" => "post"
-      },
-      "set_currency_balance" => %{
-        "url" => "#{@prefix_url}/sandbox/currencies/balance",
-        "method" => "post"
-      }
-    }[path]
+      command_map()
+    )[command]
   end
 end
