@@ -1,43 +1,67 @@
 defmodule Tinvestex.Http do
   @base_url "https://api-invest.tinkoff.ru/openapi"
   @throttle 1000
-  def get(path, command, params) do
+
+  @expected_fields ~w(
+    status payload trackingId
+  )
+
+  def get(path, params) do
     # default limit of 2 calls per second
     Process.sleep(@throttle)
 
-    headers = []
-    merged_params = Map.merge(%{command: command}, params)
-
-    case HTTPoison.get(url(path), headers, params: merged_params) do
+    case HTTPoison.get(url(path), headers(), params: params) do
       {:ok, %HTTPoison.Response{status_code: 200, body: response_body}} ->
-        handle_ok(response_body)
+        {:ok, handle_ok(response_body)}
+
+      {:ok, %HTTPoison.Response{status_code: 500, body: response_body}} ->
+        {:error, handle_server_error(response_body)}
 
       errors ->
         errors
     end
   end
 
-  def post do
+  def post(path, body, params \\ []) do
+    # default limit of 2 calls per second
+    Process.sleep(@throttle)
+
+    param_pairs =
+      Enum.map(params, fn {key, value} ->
+        "#{key}=#{value}"
+      end)
+
+    case HTTPoison.post(url(path), Jason.encode!(body), headers(), param_pairs) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: response_body}} ->
+        {:ok, handle_ok(response_body)}
+
+      {:ok, %HTTPoison.Response{status_code: 500, body: response_body}} ->
+        {:error, handle_server_error(response_body)}
+
+      errors ->
+        errors
+    end
   end
 
   # Helper Functions
 
   defp handle_ok(response_body) do
     response_body
-    |> Jason.decode()
-    |> case do
-      {:ok, %{"error" => message}} ->
-        {:error, message}
+    |> Jason.decode!()
+    |> Map.take(@expected_fields)
+  end
 
-      {:ok, %{"result" => %{"error" => message}, "success" => 0}} ->
-        {:error, message}
+  def handle_server_error(response_body) do
+    response_body
+    |> Jason.decode!()
+    |> Map.take(@expected_fields)
+  end
 
-      {:ok, body} ->
-        {:ok, body}
-
-      {:error, _} = error ->
-        error
-    end
+  defp headers do
+    [
+      {"content-type", "application/json"},
+      {"Authorization", "Bearer #{token()}"}
+    ]
   end
 
   defp url(path) do
