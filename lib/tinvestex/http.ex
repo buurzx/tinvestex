@@ -14,10 +14,10 @@ defmodule Tinvestex.Http do
 
     case HTTPoison.get(url(path), headers(), params: params) do
       {:ok, %HTTPoison.Response{status_code: 200, body: response_body}} ->
-        {:ok, handle_ok(response_body)}
+        {:ok, handle_response(response_body)}
 
       {:ok, %HTTPoison.Response{status_code: 500, body: response_body}} ->
-        {:error, handle_server_error(response_body)}
+        {:error, handle_response(response_body)}
 
       errors ->
         errors
@@ -35,10 +35,10 @@ defmodule Tinvestex.Http do
 
     case HTTPoison.post(url(path), Jason.encode!(body), headers(), param_pairs) do
       {:ok, %HTTPoison.Response{status_code: 200, body: response_body}} ->
-        {:ok, handle_ok(response_body)}
+        {:ok, handle_response(response_body)}
 
       {:ok, %HTTPoison.Response{status_code: 500, body: response_body}} ->
-        {:error, handle_server_error(response_body)}
+        {:error, handle_response(response_body)}
 
       {:error, errors} ->
         %HTTPoison.Error{id: _, reason: reason} = errors
@@ -52,13 +52,7 @@ defmodule Tinvestex.Http do
 
   # Helper Functions
 
-  defp handle_ok(response_body) do
-    response_body
-    |> Jason.decode!()
-    |> Map.take(@expected_fields)
-  end
-
-  def handle_server_error(response_body) do
+  defp handle_response(response_body) do
     response_body
     |> Jason.decode!()
     |> Map.take(@expected_fields)
