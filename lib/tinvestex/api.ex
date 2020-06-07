@@ -3,11 +3,11 @@ defmodule Tinvestex.Api do
 
   alias Tinvestex.Api.{Trading, Sandbox}
 
-  def trading(command, body \\ %{}, params \\ %{}) do
+  def trading(command, params \\ %{}, body \\ %{}) do
     Trading.request(@adapter, command, body, params)
   end
 
-  def sandbox(command, body \\ %{}, params \\ %{}) do
+  def sandbox(command, params \\ %{}, body \\ %{}) do
     Sandbox.request(@adapter, command, body, params)
   end
 
@@ -23,14 +23,24 @@ defmodule Tinvestex.Api do
   @doc """
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/sandbox/post_sandbox_remove
   ---
+
+  params:
+    %{
+      brokerAccountId: String.t()
+    }
   """
-  def sandbox_remove, do: sandbox("remove")
+  def sandbox_remove(params), do: sandbox("remove", params)
 
   @doc """
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/sandbox/post_sandbox_clear
   ---
+
+  params:
+    %{
+      brokerAccountId: String.t()
+    }
   """
-  def sandbox_clear, do: sandbox("clear")
+  def sandbox_clear(params), do: sandbox("clear", params)
 
   @doc """
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/sandbox/post_sandbox_currencies_balance
@@ -48,7 +58,7 @@ defmodule Tinvestex.Api do
     }
   """
   def sandbox_set_currency_balance(body, params) do
-    sandbox("set_currency_balance", body, params)
+    sandbox("set_currency_balance", params, body)
   end
 
   @doc """
@@ -67,7 +77,7 @@ defmodule Tinvestex.Api do
     }
   """
   def sandbox_set_figi_balance(body, params) do
-    sandbox("set_figi_balance", body, params)
+    sandbox("set_figi_balance", params, body)
   end
 
   # Trading
@@ -112,8 +122,24 @@ defmodule Tinvestex.Api do
   """
   def set_limit_order(params, body, sandbox \\ false) do
     if sandbox,
-      do: sandbox("set_limit_order", body, params),
-      else: trading("set_limit_order", body, params)
+      do: sandbox("set_limit_order", params, body),
+      else: trading("set_limit_order", params, body)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/orders/post_orders_cancel
+  ---
+
+  params:
+    %{
+      orderId: String.t()
+      brokerAccountId: String.t()
+    }
+  """
+  def set_market_order(params, body, sandbox \\ false) do
+    if sandbox,
+      do: sandbox("set_market_order", params, body),
+      else: trading("set_market_order", params, body)
   end
 
   @doc """
@@ -142,5 +168,21 @@ defmodule Tinvestex.Api do
     if sandbox,
       do: sandbox("portfolio_currencies", params),
       else: trading("portfolio_currencies", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/operations/get_operations
+  ---
+
+  params:
+    %{
+      from: String.t() # 2019-08-19T18:38:33.131642+03:00
+      to: String.t() # 2019-08-19T18:38:33.131642+03:00
+      figi: String.t()
+      brokerAccountId: String.t()
+    }
+  """
+  def operations(params, sandbox \\ false) do
+    if sandbox, do: sandbox("operations", params), else: trading("operations", params)
   end
 end

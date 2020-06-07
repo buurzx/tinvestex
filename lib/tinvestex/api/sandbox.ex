@@ -1,5 +1,6 @@
 defmodule Tinvestex.Api.Sandbox do
   import Tinvestex.Api.Base
+
   @prefix_url "sandbox"
 
   def request(adapter, command, body \\ %{}, params \\ %{}) do

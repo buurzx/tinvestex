@@ -16,6 +16,9 @@ defmodule Tinvestex.Http do
       {:ok, %HTTPoison.Response{status_code: 200, body: response_body}} ->
         {:ok, handle_response(response_body)}
 
+      {:ok, %HTTPoison.Response{status_code: 400, body: response_body}} ->
+        {:error, handle_response(response_body)}
+
       {:ok, %HTTPoison.Response{status_code: 500, body: response_body}} ->
         {:error, handle_response(response_body)}
 

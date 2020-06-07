@@ -17,12 +17,20 @@ defmodule Tinvestex.Api.Base do
         "url" => "/orders/market-order",
         "method" => "post"
       },
+      "cancel_order" => %{
+        "url" => "/orders/cancel",
+        "method" => "post"
+      },
       "portfolio" => %{
         "url" => "/portfolio",
         "method" => "get"
       },
       "portfolio_currencies" => %{
         "url" => "/portfolio/currencies",
+        "method" => "get"
+      },
+      "operations" => %{
+        "url" => "/operations",
         "method" => "get"
       }
     }
