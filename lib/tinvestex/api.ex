@@ -185,4 +185,92 @@ defmodule Tinvestex.Api do
   def operations(params, sandbox \\ false) do
     if sandbox, do: sandbox("operations", params), else: trading("operations", params)
   end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_stocks
+  ---
+  """
+  def stocks(params, sandbox \\ false) do
+    if sandbox, do: sandbox("stocks", params), else: trading("stocks", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_bonds
+  ---
+  """
+  def bonds(params, sandbox \\ false) do
+    if sandbox, do: sandbox("bonds", params), else: trading("bonds", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_etfs
+  ---
+  """
+  def etfs(params, sandbox \\ false) do
+    if sandbox, do: sandbox("etfs", params), else: trading("etfs", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_currencies
+  ---
+  """
+  def currencies(params, sandbox \\ false) do
+    if sandbox, do: sandbox("currencies", params), else: trading("currencies", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_orderbook
+  ---
+
+  params:
+    %{
+      figi: String.t(),
+      depth: String.t()
+    }
+  """
+  def orderbook(params, sandbox \\ false) do
+    if sandbox, do: sandbox("orderbook", params), else: trading("orderbook", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_candles
+  ---
+
+  params:
+    %{
+      figi: String.t(),
+      from: String.t(), # 2019-08-19T18:38:33.131642+03:00
+      to: String.t(), # 2019-08-19T18:38:33.131642+03:00
+      interval: String.t() # Available values : 1min, 2min, 3min, 5min, 10min, 15min, 30min, hour, day, week, month
+    }
+  """
+  def candles(params, sandbox \\ false) do
+    if sandbox, do: sandbox("candles", params), else: trading("candles", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_search_by_figi
+  ---
+
+  params:
+    %{
+      figi: String.t()
+    }
+  """
+  def search_by_figi(params, sandbox \\ false) do
+    if sandbox, do: sandbox("search_by_figi", params), else: trading("search_by_figi", params)
+  end
+
+  @doc """
+  https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_search_by_ticker
+  ---
+
+  params:
+    %{
+      ticker: String.t()
+    }
+  """
+  def search_by_ticker(params, sandbox \\ false) do
+    if sandbox, do: sandbox("search_by_ticker", params), else: trading("search_by_ticker", params)
+  end
 end
