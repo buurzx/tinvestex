@@ -8,6 +8,7 @@ defmodule Tinvestex.Http do
     status payload trackingId
   )
 
+  @spec get(String.t(), map) :: {:ok, map} | {:error, any}
   def get(path, params) do
     # default limit of 2 calls per second
     Process.sleep(@throttle)
@@ -27,7 +28,8 @@ defmodule Tinvestex.Http do
     end
   end
 
-  def post(path, body, params \\ []) do
+  @spec post(String.t(), map, map) :: {:ok, map} | {:error, any}
+  def post(path, body, params \\ %{}) do
     # default limit of 2 calls per second
     Process.sleep(@throttle)
 
@@ -54,7 +56,7 @@ defmodule Tinvestex.Http do
   end
 
   # Helper Functions
-
+  @spec handle_response(any) :: map
   defp handle_response(response_body) do
     response_body
     |> Jason.decode!()

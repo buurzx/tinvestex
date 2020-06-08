@@ -3,6 +3,7 @@ defmodule Tinvestex.Api do
 
   alias Tinvestex.Api.{Trading, Sandbox}
 
+  @spec trading(String.t(), map(), map()) :: {:error, any} | {:ok, map}
   def trading(command, params \\ %{}, body \\ %{}) do
     Trading.request(@adapter, command, body, params)
   end
@@ -245,6 +246,7 @@ defmodule Tinvestex.Api do
       interval: "1min" # Available values : 1min, 2min, 3min, 5min, 10min, 15min, 30min, hour, day, week, month
     }
   """
+
   def candles(params, sandbox \\ false) do
     if sandbox, do: sandbox("candles", params), else: trading("candles", params)
   end

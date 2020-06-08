@@ -1,6 +1,7 @@
 defmodule Tinvestex.Api.Trading do
   import Tinvestex.Api.Base
 
+  @spec request(module(), String.t(), map, map) :: {:error, String.t() | any} | {:ok, map}
   def request(adapter, command, body \\ %{}, params \\ %{}) do
     case api_map(command) do
       nil ->
