@@ -8,6 +8,7 @@ defmodule Tinvestex.Api do
     Trading.request(@adapter, command, body, params)
   end
 
+  @spec sandbox(String.t(), map(), map()) :: {:error, any} | {:ok, map}
   def sandbox(command, params \\ %{}, body \\ %{}) do
     Sandbox.request(@adapter, command, body, params)
   end
@@ -19,6 +20,7 @@ defmodule Tinvestex.Api do
   ---
 
   """
+  @spec sandbox_register() :: {:ok, map} | {:error, any}
   def sandbox_register, do: sandbox("register")
 
   @doc """
@@ -30,6 +32,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: String.t()
     }
   """
+  @spec sandbox_remove(map) :: {:ok, map} | {:error, any}
   def sandbox_remove(params), do: sandbox("remove", params)
 
   @doc """
@@ -41,6 +44,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: String.t()
     }
   """
+  @spec sandbox_clear(map) :: {:ok, map} | {:error, any}
   def sandbox_clear(params), do: sandbox("clear", params)
 
   @doc """
@@ -58,6 +62,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: String.t()
     }
   """
+  @spec sandbox_set_currency_balance(map, map) :: {:ok, map} | {:error, any}
   def sandbox_set_currency_balance(body, params) do
     sandbox("set_currency_balance", params, body)
   end
@@ -77,6 +82,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: String.t()
     }
   """
+  @spec sandbox_set_figi_balance(map, map) :: {:ok, map} | {:error, any}
   def sandbox_set_figi_balance(body, params) do
     sandbox("set_figi_balance", params, body)
   end
@@ -87,6 +93,7 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/user/get_user_accounts
   ---
   """
+  @spec accounts(map, boolean) :: {:ok, map} | {:error, any}
   def accounts(params, sandbox \\ false) do
     if sandbox, do: sandbox("accounts", params), else: trading("accounts", params)
   end
@@ -100,6 +107,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: string
     }
   """
+  @spec orders(map, boolean) :: {:ok, map} | {:error, any}
   def orders(params, sandbox \\ false) do
     if sandbox, do: sandbox("orders", params), else: trading("orders", params)
   end
@@ -121,6 +129,7 @@ defmodule Tinvestex.Api do
       "price": 0
     }
   """
+  @spec set_limit_order(map, map, boolean) :: {:ok, map} | {:error, any}
   def set_limit_order(params, body, sandbox \\ false) do
     if sandbox,
       do: sandbox("set_limit_order", params, body),
@@ -137,6 +146,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: String.t()
     }
   """
+  @spec set_market_order(map, map, boolean) :: {:ok, map} | {:error, any}
   def set_market_order(params, body, sandbox \\ false) do
     if sandbox,
       do: sandbox("set_market_order", params, body),
@@ -152,6 +162,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: string
     }
   """
+  @spec portfolio(map, boolean) :: {:ok, map} | {:error, any}
   def portfolio(params, sandbox \\ false) do
     if sandbox, do: sandbox("portfolio", params), else: trading("portfolio", params)
   end
@@ -165,6 +176,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: string
     }
   """
+  @spec portfolio_currencies(map, boolean) :: {:ok, map} | {:error, any}
   def portfolio_currencies(params, sandbox \\ false) do
     if sandbox,
       do: sandbox("portfolio_currencies", params),
@@ -183,6 +195,7 @@ defmodule Tinvestex.Api do
       brokerAccountId: String.t()
     }
   """
+  @spec operations(map, boolean) :: {:ok, map} | {:error, any}
   def operations(params, sandbox \\ false) do
     if sandbox, do: sandbox("operations", params), else: trading("operations", params)
   end
@@ -191,6 +204,7 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_stocks
   ---
   """
+  @spec stocks(map, boolean) :: {:ok, map} | {:error, any}
   def stocks(params, sandbox \\ false) do
     if sandbox, do: sandbox("stocks", params), else: trading("stocks", params)
   end
@@ -199,6 +213,7 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_bonds
   ---
   """
+  @spec bonds(map, boolean) :: {:ok, map} | {:error, any}
   def bonds(params, sandbox \\ false) do
     if sandbox, do: sandbox("bonds", params), else: trading("bonds", params)
   end
@@ -207,6 +222,7 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_etfs
   ---
   """
+  @spec etfs(map, boolean) :: {:ok, map} | {:error, any}
   def etfs(params, sandbox \\ false) do
     if sandbox, do: sandbox("etfs", params), else: trading("etfs", params)
   end
@@ -215,6 +231,7 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_currencies
   ---
   """
+  @spec currencies(map, boolean) :: {:ok, map} | {:error, any}
   def currencies(params, sandbox \\ false) do
     if sandbox, do: sandbox("currencies", params), else: trading("currencies", params)
   end
@@ -229,6 +246,7 @@ defmodule Tinvestex.Api do
       depth: String.t()
     }
   """
+  @spec orderbook(map, boolean) :: {:ok, map} | {:error, any}
   def orderbook(params, sandbox \\ false) do
     if sandbox, do: sandbox("orderbook", params), else: trading("orderbook", params)
   end
@@ -246,7 +264,7 @@ defmodule Tinvestex.Api do
       interval: "1min" # Available values : 1min, 2min, 3min, 5min, 10min, 15min, 30min, hour, day, week, month
     }
   """
-
+  @spec candles(map, boolean) :: {:ok, map} | {:error, any}
   def candles(params, sandbox \\ false) do
     if sandbox, do: sandbox("candles", params), else: trading("candles", params)
   end
@@ -260,6 +278,7 @@ defmodule Tinvestex.Api do
       figi: String.t()
     }
   """
+  @spec search_by_figi(map, boolean) :: {:ok, map} | {:error, any}
   def search_by_figi(params, sandbox \\ false) do
     if sandbox, do: sandbox("search_by_figi", params), else: trading("search_by_figi", params)
   end
@@ -273,6 +292,7 @@ defmodule Tinvestex.Api do
       ticker: String.t()
     }
   """
+  @spec search_by_ticker(map, boolean) :: {:ok, map} | {:error, any}
   def search_by_ticker(params, sandbox \\ false) do
     if sandbox, do: sandbox("search_by_ticker", params), else: trading("search_by_ticker", params)
   end
