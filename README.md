@@ -1,4 +1,4 @@
-# [WIP] Tinvestex - elixir client for Tinkoff OpenAPI
+# Tinvestex - elixir client for Tinkoff OpenAPI
 
 Данный проект представляет собой инструментарий на языке Elixir для работы с OpenAPI Тинькофф Инвестиции.
 
