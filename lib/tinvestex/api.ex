@@ -236,12 +236,13 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_candles
   ---
 
+
   params:
     %{
       figi: String.t(),
-      from: String.t(), # 2019-08-19T18:38:33.131642+03:00
-      to: String.t(), # 2019-08-19T18:38:33.131642+03:00
-      interval: String.t() # Available values : 1min, 2min, 3min, 5min, 10min, 15min, 30min, hour, day, week, month
+      from: "2019-08-19T18:38:33.131642+03:00",
+      to: "2019-08-19T18:38:33.131642+03:00",
+      interval: "1min" # Available values : 1min, 2min, 3min, 5min, 10min, 15min, 30min, hour, day, week, month
     }
   """
   def candles(params, sandbox \\ false) do
