@@ -204,9 +204,9 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/market/get_market_stocks
   ---
   """
-  @spec stocks(map, boolean) :: {:ok, map} | {:error, any}
-  def stocks(params, sandbox \\ false) do
-    if sandbox, do: sandbox("stocks", params), else: trading("stocks", params)
+  @spec stocks(boolean) :: {:ok, map} | {:error, any}
+  def stocks(sandbox \\ false) do
+    if sandbox, do: sandbox("stocks"), else: trading("stocks")
   end
 
   @doc """
