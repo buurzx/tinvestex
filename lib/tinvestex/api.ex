@@ -142,15 +142,31 @@ defmodule Tinvestex.Api do
 
   params:
     %{
-      orderId: String.t()
+      figi: String.t()
       brokerAccountId: String.t()
     }
+
+  body:
+    %{
+      "lots": 0,
+      "operation": "Buy"
+    }
   """
-  @spec set_market_order(map, map, boolean) :: {:ok, map} | {:error, any}
-  def set_market_order(params, body, sandbox \\ false) do
+  @spec set_market_order(String.t(), String.t(), pos_integer(), boolean) ::
+          {:ok, map} | {:error, any}
+  def set_market_order(figi, brokerAccountId, lots, sandbox \\ false) do
+    # def set_market_order(params, body, sandbox \\ false) do
     if sandbox,
-      do: sandbox("set_market_order", params, body),
-      else: trading("set_market_order", params, body)
+      do:
+        sandbox("set_market_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
+          lots: lots,
+          operation: "Buy"
+        }),
+      else:
+        trading("set_market_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
+          lots: lots,
+          operation: "Buy"
+        })
   end
 
   @doc """
