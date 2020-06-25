@@ -116,56 +116,46 @@ defmodule Tinvestex.Api do
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/orders/post_orders_limit_order
   ---
 
-  params:
-    %{
-      figi: string
-      brokerAccountId: string
-    }
-
-  body:
-    %{
-      "lots": 0,
-      "operation": "Buy",
-      "price": 0
-    }
+  * :operation: "Buy" | "Sell"
   """
-  @spec set_limit_order(map, map, boolean) :: {:ok, map} | {:error, any}
-  def set_limit_order(params, body, sandbox \\ false) do
+  @spec set_limit_order(String.t(), String.t(), pos_integer(), String.t(), float, boolean) ::
+          {:ok, map} | {:error, any}
+  def set_limit_order(figi, brokerAccountId, lots, operation, price, sandbox \\ false) do
     if sandbox,
-      do: sandbox("set_limit_order", params, body),
-      else: trading("set_limit_order", params, body)
+      do:
+        sandbox("set_limit_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
+          lots: lots,
+          operation: operation,
+          price: price
+        }),
+      else:
+        trading("set_limit_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
+          lots: lots,
+          operation: operation,
+          price: price
+        })
   end
 
   @doc """
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/orders/post_orders_cancel
   ---
 
-  params:
-    %{
-      figi: String.t()
-      brokerAccountId: String.t()
-    }
-
-  body:
-    %{
-      "lots": 0,
-      "operation": "Buy"
-    }
+  * :operation: "Buy" | "Sell"
   """
-  @spec set_market_order(String.t(), String.t(), pos_integer(), boolean) ::
+  @spec set_market_order(String.t(), String.t(), pos_integer(), String.t(), boolean) ::
           {:ok, map} | {:error, any}
-  def set_market_order(figi, brokerAccountId, lots, sandbox \\ false) do
+  def set_market_order(figi, brokerAccountId, lots, operation, sandbox \\ false) do
     # def set_market_order(params, body, sandbox \\ false) do
     if sandbox,
       do:
         sandbox("set_market_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
           lots: lots,
-          operation: "Buy"
+          operation: operation
         }),
       else:
         trading("set_market_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
           lots: lots,
-          operation: "Buy"
+          operation: operation
         })
   end
 
