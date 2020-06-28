@@ -20,9 +20,11 @@ defmodule Tinvestex.Api.Trading do
         body
       end
 
+    adapter_pid = adapter.adapter_pid(to_string(adapter))
+
     case route_params["method"] do
-      "post" -> adapter.post(route_params["url"], post_body, params)
-      "get" -> adapter.get(route_params["url"], params)
+      "post" -> GenServer.call(adapter_pid, {:post, route_params["url"], post_body, params})
+      "get" -> GenServer.call(adapter_pid, {:get, route_params["url"], params})
     end
   end
 

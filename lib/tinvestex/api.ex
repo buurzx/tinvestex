@@ -120,7 +120,7 @@ defmodule Tinvestex.Api do
   """
   @spec set_limit_order(String.t(), String.t(), pos_integer(), String.t(), float, boolean) ::
           {:ok, map} | {:error, any}
-  def set_limit_order(figi, brokerAccountId, lots, operation, price, sandbox \\ false) do
+  defp set_limit_order(figi, brokerAccountId, lots, operation, price, sandbox) do
     if sandbox,
       do:
         sandbox("set_limit_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
@@ -136,6 +136,17 @@ defmodule Tinvestex.Api do
         })
   end
 
+  @spec buy_limit_order(binary, binary, pos_integer, float, boolean) :: {:error, any} | {:ok, map}
+  def buy_limit_order(figi, brokerAccountId, lots, price, sandbox \\ false) do
+    set_limit_order(figi, brokerAccountId, lots, "Buy", price, sandbox)
+  end
+
+  @spec sell_limit_order(binary, binary, pos_integer, float, boolean) ::
+          {:error, any} | {:ok, map}
+  def sell_limit_order(figi, brokerAccountId, lots, price, sandbox \\ false) do
+    set_limit_order(figi, brokerAccountId, lots, "Sell", price, sandbox)
+  end
+
   @doc """
   https://tinkoffcreditsystems.github.io/invest-openapi/swagger-ui/#/orders/post_orders_cancel
   ---
@@ -144,8 +155,7 @@ defmodule Tinvestex.Api do
   """
   @spec set_market_order(String.t(), String.t(), pos_integer(), String.t(), boolean) ::
           {:ok, map} | {:error, any}
-  def set_market_order(figi, brokerAccountId, lots, operation, sandbox \\ false) do
-    # def set_market_order(params, body, sandbox \\ false) do
+  defp set_market_order(figi, brokerAccountId, lots, operation, sandbox) do
     if sandbox,
       do:
         sandbox("set_market_order", %{figi: figi, brokerAccountId: brokerAccountId}, %{
@@ -157,6 +167,17 @@ defmodule Tinvestex.Api do
           lots: lots,
           operation: operation
         })
+  end
+
+  @spec buy_market_order(binary, binary, pos_integer, boolean) ::
+          {:error, any} | {:ok, map}
+  def buy_market_order(figi, brokerAccountId, lots, sandbox \\ false) do
+    set_market_order(figi, brokerAccountId, lots, "Buy", sandbox)
+  end
+
+  @spec sell_market_order(binary, binary, pos_integer, boolean) :: {:error, any} | {:ok, map}
+  def sell_market_order(figi, brokerAccountId, lots, sandbox \\ false) do
+    set_market_order(figi, brokerAccountId, lots, "Sell", sandbox)
   end
 
   @doc """

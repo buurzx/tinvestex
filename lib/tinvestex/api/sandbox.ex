@@ -21,9 +21,17 @@ defmodule Tinvestex.Api.Sandbox do
         body
       end
 
+    adapter_pid = adapter.adapter_pid(to_string(adapter))
+
     case route_params["method"] do
-      "post" -> adapter.post("#{@prefix_url}/#{route_params["url"]}", post_body, params)
-      "get" -> adapter.get("#{@prefix_url}/#{route_params["url"]}", params)
+      "post" ->
+        GenServer.call(
+          adapter_pid,
+          {:post, "#{@prefix_url}/#{route_params["url"]}", post_body, params}
+        )
+
+      "get" ->
+        GenServer.call(adapter_pid, {:get, "#{@prefix_url}/#{route_params["url"]}", params})
     end
   end
 

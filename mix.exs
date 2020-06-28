@@ -4,7 +4,7 @@ defmodule Tinvestex.MixProject do
   def project do
     [
       app: :tinvestex,
-      version: "0.1.7",
+      version: "0.1.16",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -14,7 +14,8 @@ defmodule Tinvestex.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {Tinvestex, []}
     ]
   end
 
