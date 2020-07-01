@@ -72,17 +72,15 @@ defmodule Tinvestex.Http do
     # default limit of 2 calls per second
     Process.sleep(@throttle)
 
-    param_pairs =
-      Enum.map(params, fn {key, value} ->
-        "#{key}=#{value}"
-      end)
-
     response =
-      case HTTPoison.post(url(path), Jason.encode!(body), headers(), param_pairs) do
+      case HTTPoison.post(url(path), Jason.encode!(body), headers(), params: params) do
         {:ok, %HTTPoison.Response{status_code: 200, body: response_body}} ->
           {:ok, handle_response(response_body)}
 
         {:ok, %HTTPoison.Response{status_code: 500, body: response_body}} ->
+          {:error, handle_response(response_body)}
+
+        {:ok, %HTTPoison.Response{status_code: 400, body: response_body}} ->
           {:error, handle_response(response_body)}
 
         {:error, errors} ->
