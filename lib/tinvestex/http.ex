@@ -33,8 +33,8 @@ defmodule Tinvestex.Http do
   def handle_call({:get, path, params}, _from, state) do
     # default limit of 2 calls per second
     Process.sleep(@throttle)
-    IO.inspect(DateTime.now!("Etc/UTC"), label: "Time NOW")
-    IO.puts("=================")
+    # IO.inspect(DateTime.now!("Etc/UTC"), label: "Time NOW")
+    # IO.puts("=================")
 
     response =
       case HTTPoison.get(url(path), headers(), params: params) do
